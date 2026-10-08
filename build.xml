@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DepositCalculator" default="all" basedir=".">
+
+    <!-- Структура проекта. -->
+    <property name="src.dir" value="src/main/java"/>
+    <property name="test.src.dir" value="src/test/java"/>
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="test.classes.dir" value="${build.dir}/test-classes"/>
+    <property name="reports.dir" value="${build.dir}/reports"/>
+    <property name="jar.dir" value="${build.dir}/jar"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="main.class" value="by.belaya.deposit.Main"/>
+
+    <!--
+        В Ant classpath формируется явно.
+        В него входят скомпилированный основной код,
+        тестовые классы и JAR из каталога lib.
+    -->
+    <path id="test.classpath">
+        <pathelement location="${classes.dir}"/>
+        <pathelement location="${test.classes.dir}"/>
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <!-- Только очистка. clean НЕ является обязательной частью compile. -->
+    <target name="clean" description="Удалить результаты сборки">
+        <delete dir="${build.dir}"/>
+        <echo message="Сборочная директория очищена."/>
+    </target>
+
+    <!-- Создание каталогов без скрытой очистки. -->
+    <target name="init" description="Создать каталоги сборки">
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${test.classes.dir}"/>
+        <mkdir dir="${reports.dir}"/>
+        <mkdir dir="${jar.dir}"/>
+    </target>
+
+    <target name="compile" depends="init" description="Компиляция приложения">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}"
+               encoding="UTF-8" release="17" includeantruntime="false"/>
+        <echo message="Основной код скомпилирован."/>
+    </target>
+
+    <target name="compile-tests" depends="compile" description="Компиляция тестов">
+        <javac srcdir="${test.src.dir}" destdir="${test.classes.dir}"
+               encoding="UTF-8" release="17" includeantruntime="false">
+            <classpath refid="test.classpath"/>
+        </javac>
+        <echo message="Тестовый код скомпилирован."/>
+    </target>
+
+    <target name="test" depends="compile-tests" description="Запуск JUnit 5">
+        <mkdir dir="${reports.dir}/xml"/>
+        <junitlauncher haltOnFailure="true" printSummary="true">
+            <classpath refid="test.classpath"/>
+            <testclasses outputDir="${reports.dir}/xml"
+                        includeEngines="junit-jupiter">
+                <fileset dir="${test.classes.dir}">
+                    <include name="**/*Test.class"/>
+                </fileset>
+                <!-- XML-результаты для последующей агрегации junitreport. -->
+                <listener type="legacy-xml"/>
+                <!-- Краткий текстовый вывод в консоль. -->
+                <listener type="legacy-plain"/>
+            </testclasses>
+        </junitlauncher>
+        <echo message="JUnit 5 тесты выполнены."/>
+    </target>
+
+    <target name="report" depends="test" description="Формирование HTML отчета">
+        <mkdir dir="${reports.dir}/html"/>
+        <junitreport todir="${reports.dir}/xml">
+            <fileset dir="${reports.dir}/xml" includes="TEST-*.xml"/>
+            <report format="frames" todir="${reports.dir}/html"/>
+        </junitreport>
+        <echo message="HTML отчет создан в build/reports/html"/>
+    </target>
+
+    <target name="jar" depends="test" description="Создание JAR">
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+        </jar>
+        <echo message="JAR создан."/>
+    </target>
+
+    <target name="run" depends="jar" description="Запуск приложения">
+        <java jar="${jar.dir}/${ant.project.name}.jar" fork="true"/>
+    </target>
+
+    <!-- Полный воспроизводимый учебный цикл начинается с clean. -->
+    <target name="all" depends="clean,report,jar"
+            description="Очистить, собрать, протестировать, создать отчет и JAR">
+        <echo message="Ant: полная сборка завершена успешно."/>
+    </target>
+
+</project>

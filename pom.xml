@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+         http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- Версия модели POM. -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Maven coordinates. -->
+    <groupId>by.student</groupId>
+    <artifactId>deposit_calculator</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <!-- Результат сборки — JAR. -->
+    <packaging>jar</packaging>
+
+    <name>Deposit Calculator</name>
+
+    <properties>
+        <!-- Целевая версия Java. -->
+        <maven.compiler.release>17</maven.compiler.release>
+        <!-- Единая кодировка проекта. -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Версия JUnit фиксируется в одном месте. -->
+        <junit.version>5.14.4</junit.version>
+    </properties>
+
+    <dependencies>
+        <!--
+            JUnit Jupiter используется только тестами.
+            scope=test означает, что зависимость
+            не является runtime-зависимостью приложения.
+        -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Компиляция Java. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
+                <configuration>
+                    <release>17</release>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <!--
+                Surefire запускает unit tests
+                на фазе test.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.6.0</version>
+            </plugin>
+            <!--
+                Отдельный HTML-отчет Surefire.
+                Он использует XML-результаты, созданные на фазе test.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.6.0</version>
+            </plugin>
+            <!-- Формирование JAR с Main-Class. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>
+                                by.belaya.deposit.Main
+                            </mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
