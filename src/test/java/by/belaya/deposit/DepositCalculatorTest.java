@@ -8,11 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Модульные тесты бизнес-логики.
- * Группы: позитивные (simple, compound, total, interest),
- * граничные (zeroRate, oneYear) и ошибочные (exceptions) + отчет.
- */
 @DisplayName("Тесты калькулятора вкладов")
 class DepositCalculatorTest {
 
@@ -20,7 +15,6 @@ class DepositCalculatorTest {
 
     @BeforeEach
     void setUp() {
-        // Каждый тест получает новый экземпляр сервиса.
         calculator = new DepositCalculator();
     }
 

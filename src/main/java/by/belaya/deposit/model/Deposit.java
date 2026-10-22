@@ -1,17 +1,10 @@
 package by.belaya.deposit.model;
 
-/**
- * Модель банковского вклада.
- *
- * Класс не зависит от Ant, Maven или Gradle.
- * Это принципиально: инструменты сборки должны
- * работать с одним и тем же исходным кодом.
- */
 public class Deposit {
-    private final double principal;      // Первоначальная сумма.
-    private final double annualRate;     // Годовая ставка в процентах.
-    private final int years;             // Срок вклада в годах.
-    private final boolean capitalization; // Есть ли капитализация.
+    private final double principal;
+    private final double annualRate;
+    private final int years;
+    private final boolean capitalization;
 
     public Deposit(
             double principal,
